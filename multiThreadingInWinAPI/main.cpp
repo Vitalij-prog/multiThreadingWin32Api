@@ -55,9 +55,6 @@ int main()
 	int k1 = 1, k2 = 51;
 	HANDLE h1, h2;*/
 	
-
-
-
 	//h1 = CreateThread(NULL, 0, ThreadFunction, &k1, CREATE_SUSPENDED, &idThread);
 	//h2 = CreateThread(NULL, 0, ThreadFunction, &k2, CREATE_SUSPENDED, &idThread);
 	//// Выполнение потоков
@@ -66,6 +63,7 @@ int main()
 	
 	/*WaitForSingleObject(h1, INFINITE);
 	WaitForSingleObject(h2, INFINITE);*/
+
 	int number = 0; 
 	while (true)
 	{
@@ -77,8 +75,6 @@ int main()
 		HANDLE handle;		
 
 		handle = CreateThread(NULL, 0, findFibonacсiNumberOf, &number, CREATE_SUSPENDED, NULL); 
-
-		
 
 		ResumeThread(handle);  
 
