@@ -47,44 +47,71 @@ DWORD WINAPI findFibonacñiNumberOf(PVOID number) {
 }
 
 
+
+unsigned __int64    convert(const FILETIME & ac_FileTime)
+{
+	ULARGE_INTEGER    lv_Large;
+
+	lv_Large.LowPart = ac_FileTime.dwLowDateTime;
+	lv_Large.HighPart = ac_FileTime.dwHighDateTime;
+
+	return lv_Large.QuadPart;
+}
+
+void choosePriority(HANDLE& h) {
+	int option;
+	cout << "Set priority: " << endl;
+	cout << "1 - TIME_CRITICAL" << endl;
+	cout << "Another - NORMAL" << endl;
+	cout << "input: ";
+	cin >> option;
+	if (option == 1) {
+		SetThreadPriority(h, THREAD_PRIORITY_TIME_CRITICAL);
+	}
+	else {
+		SetThreadPriority(h, THREAD_PRIORITY_NORMAL);
+	}
+	return;
+}
+
+
+
 int main()
 {
-	//setlocale(LC_ALL,"ru");
+	FILETIME userTime, coreTime, dummy;  
 
-	/*DWORD idThread;
-	int k1 = 1, k2 = 51;
-	HANDLE h1, h2;*/
-	
-	//h1 = CreateThread(NULL, 0, ThreadFunction, &k1, CREATE_SUSPENDED, &idThread);
-	//h2 = CreateThread(NULL, 0, ThreadFunction, &k2, CREATE_SUSPENDED, &idThread);
-	//// Âûïîëíåíèå ïîòîêîâ
-	//ResumeThread(h1);
-	//ResumeThread(h2);
-	
-	/*WaitForSingleObject(h1, INFINITE);
-	WaitForSingleObject(h2, INFINITE);*/
-
-	int number = 0; 
+	int number = 0;						 
 	while (true)
 	{
 		cout << "input number: ";
-		cin >> number;
+		cin >> number;					 
 
 		if (number < 0) break;
 
-		HANDLE handle;		
+		HANDLE handle;					
 
+		
 		handle = CreateThread(NULL, 0, findFibonacñiNumberOf, &number, CREATE_SUSPENDED, NULL); 
 
-		ResumeThread(handle);  
+		
+		choosePriority(handle);
+
+		ResumeThread(handle);   
 
 		WaitForSingleObject(handle, INFINITE); 
 
-		cout << "main result: \t" << result << endl;
+		GetThreadTimes(handle, &dummy, &dummy, &coreTime, &userTime);  
+																	  
+		CloseHandle(handle); 
+
+		cout << "main result: \t" << result << endl; 
+
+		
+		cout << "time spended : " << (convert(userTime) + convert(coreTime)) * 0.0000001 << endl; 
+		cout << endl;
 	}
 	
 	system("pause");
-
 	return 0;
 }
 
